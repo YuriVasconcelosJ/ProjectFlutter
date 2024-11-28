@@ -37,13 +37,16 @@ class _InternaState extends State<Interna> {
               width: 4,
             ),
           ),
-          child: const Column(
+          child: Column(
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(bottom: 20),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Seja bem vindo(a)!",),
+                    Text(
+                      "Seja bem vindo(a)!",
+                    ),
                     Text(
                       "Pessoa",
                       style: TextStyle(
@@ -52,7 +55,26 @@ class _InternaState extends State<Interna> {
                     ),
                   ],
                 ),
-              )
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(8, 0, 8, 16),
+                child: Divider(
+                  color: Colors.black,
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                child: const Text(
+                  "Logout",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
             ],
           ),
         ),
