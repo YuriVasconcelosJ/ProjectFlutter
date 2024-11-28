@@ -8,19 +8,21 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  bool entrar = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // Cor de fundo da tela
-      backgroundColor: Colors.black,
+      backgroundColor: (entrar) ? Colors.black : Colors.brown,
       appBar: AppBar(
         centerTitle: true,
         // Cor da barra superior
-        backgroundColor: Colors.red,
+        backgroundColor: (entrar) ? Colors.red : Colors.deepOrange,
         // Titulo da barra superior
-        title: const Text(
-          "Tela de LOGIN",
-          style: TextStyle(
+        title: Text(
+          (entrar) ? "Tela de LOGIN" : "Tela de CADASTRO",
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.w500,
@@ -39,9 +41,14 @@ class _LoginState extends State<Login> {
               // children:
               children: [
                 // Icone do login
-                const Icon(Icons.account_circle_rounded,
-                    color: Colors.white, size: 110),
+                Icon(
+                    (entrar)
+                        ? Icons.account_circle_rounded
+                        : Icons.account_circle_outlined,
+                    color: Colors.white,
+                    size: 110),
                 // E-mail
+                const SizedBox(height: 20),
                 TextFormField(
                     decoration: InputDecoration(
                   hintText: "E-mail",
@@ -56,22 +63,102 @@ class _LoginState extends State<Login> {
                   ),
                 )),
                 // Senha
+                const SizedBox(
+                    height: 20), // Espaçamento entre o e-mail e a senha
                 TextFormField(
-                    decoration: InputDecoration(
-                  hintText: "Senha",
-                  fillColor: Colors.white, // Cor do texto
-                  filled: true, // Preenchimento do texto
-                  hintStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
+                  decoration: InputDecoration(
+                    hintText: "Senha",
+                    fillColor: Colors.white, // Cor do texto
+                    filled: true, // Preenchimento do texto
+                    hintStyle: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+
+                    border: OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.circular(10), // Estilo da borda
+                    ),
                   ),
-        
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10), // Estilo da borda
+                  obscureText: true,
+                ),
+                // Tela de Cadastro
+                Visibility(
+                    visible: !entrar,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Confirme a Senha",
+                            fillColor: Colors.white, // Cor do texto
+                            filled: true, // Preenchimento do texto
+                            hintStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.circular(10), // Estilo da borda
+                            ),
+                          ),
+                          obscureText: true,
+                        ),
+                        TextFormField(
+                            decoration: InputDecoration(
+                          hintText: "E-mail",
+                          fillColor: Colors.white, // Cor do texto
+                          filled: true, // Preenchimento do texto
+                          hintStyle: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.circular(10), // Estilo da borda
+                          ),
+                        )),
+                      ],
+                    )),
+                // Espaçamento entre o botão e o texto
+                Padding(
+                  padding: const EdgeInsets.only(top: 15, bottom: 15),
+                  // Botaton de login:
+                  // Arrumar o tamanho do botão
+                  child: SizedBox(
+                    height: 40,
+                    child: ElevatedButton(
+                        onPressed: () {},
+                        // Formataçao do botao
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                (entrar) ? Colors.red : Colors.deepOrangeAccent,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6))),
+                        child: Text(
+                          (entrar) ? "Login" : "cadastar",
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                        )),
                   ),
                 ),
-                obscureText: true,
-                ),
+                // Texto de cadastro
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        entrar = !entrar;
+                      });
+                    },
+                    child: Text(
+                      (entrar) ? "Cadastre-se" : "Entre",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                    ))
               ],
             ),
           ),
