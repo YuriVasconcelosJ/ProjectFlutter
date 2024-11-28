@@ -1,23 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_project/login.dart';
 void main() {
   runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false, // Remove o banner de debug
     home: Login(),
   ));
-}
-
-class Login extends StatefulWidget {
-  const Login({super.key});
-
-  @override
-  State<Login> createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-    );
-  }
 }
