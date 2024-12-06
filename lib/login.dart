@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart'; // Importa Firebase Auth
 import 'package:flutter/material.dart';
+import 'interna.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -8,157 +10,150 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool entrar = true;
+
+  // Função de login com Firebase
+  Future<void> _login() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      if (userCredential.user != null) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
+
+  // Função de cadastro com Firebase
+  Future<void> _register() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      if (userCredential.user != null) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cadastro bem-sucedido!')));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Cor de fundo da tela
-      backgroundColor: (entrar) ? Colors.black : Colors.brown,
-      appBar: AppBar(
-        centerTitle: true,
-        // Cor da barra superior
-        backgroundColor: (entrar) ? Colors.red : Colors.deepOrange,
-        // Titulo da barra superior
-        title: Text(
-          (entrar) ? "Tela de LOGIN" : "Tela de CADASTRO",
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-      // Formulario de login
+      backgroundColor: Colors.grey[100],
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+          padding: const EdgeInsets.all(20.0),
           child: Form(
             child: Column(
-              // Alinhamento dos elementos
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              // children:
               children: [
-                // Icone do login
-                Icon(
-                    (entrar)
-                        ? Icons.account_circle_rounded
-                        : Icons.account_circle_outlined,
-                    color: Colors.white,
-                    size: 110),
-                // E-mail
+                const SizedBox(height: 30),
+                Text(
+                  (entrar) ? "Bem-vindo de volta!" : "Crie sua conta",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  (entrar)
+                      ? "Entre com sua conta para continuar"
+                      : "Cadastre-se para começar",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16, color: Colors.black54),
+                ),
                 const SizedBox(height: 20),
                 TextFormField(
-                    decoration: InputDecoration(
-                  hintText: "E-mail",
-                  fillColor: Colors.white, // Cor do texto
-                  filled: true, // Preenchimento do texto
-                  hintStyle: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10), // Estilo da borda
-                  ),
-                )),
-                // Senha
-                const SizedBox(
-                    height: 20), // Espaçamento entre o e-mail e a senha
-                TextFormField(
+                  controller: _emailController,
                   decoration: InputDecoration(
-                    hintText: "Senha",
-                    fillColor: Colors.white, // Cor do texto
-                    filled: true, // Preenchimento do texto
-                    hintStyle: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                    ),
-
+                    labelText: "E-mail",
+                    prefixIcon: const Icon(Icons.email),
                     border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(10), // Estilo da borda
+                      borderRadius: BorderRadius.circular(12),
                     ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: "Senha",
+                    prefixIcon: const Icon(Icons.lock),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
                   ),
                   obscureText: true,
                 ),
-                // Tela de Cadastro
                 Visibility(
-                    visible: !entrar,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Confirme a Senha",
-                            fillColor: Colors.white, // Cor do texto
-                            filled: true, // Preenchimento do texto
-                            hintStyle: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
-
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.circular(10), // Estilo da borda
-                            ),
-                          ),
-                          obscureText: true,
-                        ),
-                        TextFormField(
-                            decoration: InputDecoration(
-                          hintText: "E-mail",
-                          fillColor: Colors.white, // Cor do texto
-                          filled: true, // Preenchimento do texto
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
+                  visible: !entrar,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          labelText: "Confirme a senha",
+                          prefixIcon: const Icon(Icons.lock),
                           border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.circular(10), // Estilo da borda
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                        )),
-                      ],
-                    )),
-                // Espaçamento entre o botão e o texto
-                Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 15),
-                  // Botaton de login:
-                  // Arrumar o tamanho do botão
-                  child: SizedBox(
-                    height: 40,
-                    child: ElevatedButton(
-                        onPressed: () {},
-                        // Formataçao do botao
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                (entrar) ? Colors.red : Colors.deepOrangeAccent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6))),
-                        child: Text(
-                          (entrar) ? "Login" : "cadastar",
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                          ),
-                        )),
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                        obscureText: true,
+                      ),
+                    ],
                   ),
                 ),
-                // Texto de cadastro
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () {
+                    if (entrar) {
+                      _login();
+                    } else {
+                      _register();
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: const Color.fromRGBO(244, 67, 54, 1),
+                  ),
+                  child: Text(
+                    (entrar) ? "Entrar" : "Cadastrar",
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ),
+                const SizedBox(height: 15),
                 TextButton(
-                    onPressed: () {
-                      setState(() {
-                        entrar = !entrar;
-                      });
-                    },
-                    child: Text(
-                      (entrar) ? "Cadastre-se" : "Entre",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                    ))
+                  onPressed: () {
+                    setState(() {
+                      entrar = !entrar;
+                    });
+                  },
+                  child: Text(
+                    (entrar) ? "Não tem conta? Cadastre-se" : "Já tem conta? Faça login",
+                    style: const TextStyle(fontSize: 16, color: Colors.deepOrangeAccent),
+                  ),
+                ),
               ],
             ),
           ),
@@ -167,3 +162,4 @@ class _LoginState extends State<Login> {
     );
   }
 }
+

@@ -1,18 +1,32 @@
-allprojects {
+// Configurações de build para o projeto root
+buildscript {
     repositories {
-        google()
-        mavenCentral()
+        google()  // Repositório do Google para dependências do Android
+        mavenCentral()  // Repositório Maven Central
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.2'  // Versão do plugin Gradle para Android
+        classpath 'com.google.gms:google-services:4.3.15'  // Plugin para integrar o Firebase
     }
 }
 
-rootProject.buildDir = "../build"
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+allprojects {
+    repositories {
+        google()  // Repositório do Google
+        mavenCentral()  // Repositório Maven Central
+    }
 }
+
+rootProject.buildDir = "../build"  // Diretório de build do projeto root
+
 subprojects {
-    project.evaluationDependsOn(":app")
+    project.buildDir = "${rootProject.buildDir}/${project.name}"  // Definição do diretório de build para subprojetos
+}
+
+subprojects {
+    project.evaluationDependsOn(":app")  // Configuração para garantir que o app seja avaliado antes de outros subprojetos
 }
 
 tasks.register("clean", Delete) {
-    delete rootProject.buildDir
+    delete rootProject.buildDir  // Tarefa para limpar o diretório de build
 }
